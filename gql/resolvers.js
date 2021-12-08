@@ -1,3 +1,5 @@
+const bcrypt = require("bcryptjs");
+
 const User = require("../models/user");
 
 const resolvers = {
@@ -29,7 +31,7 @@ const resolvers = {
         throw new Error("Username already exists");
       }
 
-      // TODO: encrypt password
+      newUser.password = await bcrypt.hash(password, 12);
 
       try {
         const user = new User(newUser);
