@@ -1,6 +1,15 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 
+const getUser = async ({ id }) => {
+  try {
+    const user = await User.findById(id);
+    return user;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 const registerUser = async (input) => {
   const newUser = {
     ...input,
@@ -32,4 +41,4 @@ const registerUser = async (input) => {
   }
 };
 
-module.exports = { registerUser };
+module.exports = { getUser, registerUser };
