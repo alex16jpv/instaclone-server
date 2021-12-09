@@ -1,6 +1,4 @@
-const bcrypt = require("bcryptjs");
-
-const User = require("../models/user");
+const userController = require("../controllers/user");
 
 const resolvers = {
   Query: {
@@ -12,37 +10,7 @@ const resolvers = {
 
   Mutation: {
     // User
-    registerUser: async (_, { input }) => {
-      const newUser = {
-        ...input,
-        email: input.email.toLowerCase(),
-        username: input.username.toLowerCase(),
-      };
-
-      const { email, username, password } = newUser;
-
-      const foundEmail = await User.findOne({ email });
-      if (foundEmail) {
-        throw new Error("Email already exists");
-      }
-
-      const foundUsername = await User.findOne({ username });
-      if (foundUsername) {
-        throw new Error("Username already exists");
-      }
-
-      newUser.password = await bcrypt.hash(password, 12);
-
-      try {
-        const user = new User(newUser);
-        await user.save();
-        return user;
-      } catch (error) {
-        console.log(error);
-      }
-
-      return null;
-    },
+    registerUser: (_, { input }) => userController.registerUser(input),
   },
 };
 
