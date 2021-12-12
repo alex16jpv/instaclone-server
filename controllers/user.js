@@ -13,9 +13,18 @@ const createToken = (user, expiresIn = "1h") => {
   return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
 };
 
-const getUser = async (id) => {
+const getUser = async (id, username) => {
   try {
-    const user = await User.findById(id);
+    let user;
+    if (id) {
+      user = await User.findById(id);
+    } else if (username) {
+      user = await User.findOne({ username: username.toLowerCase() });
+    }
+
+    if (!user) {
+      throw new Error("User not found");
+    }
     return user;
   } catch (error) {
     throw new Error(error);
